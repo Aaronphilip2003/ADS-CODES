@@ -113,7 +113,63 @@ class Dictionary{
 
     }
 
-    
+    Node* findMin(Node* node)
+    {
+        if(node==NULL)
+        {
+            return NULL;
+        }
+        else if(node->left==NULL)
+        {
+            return node;
+        }
+        else
+        {
+            return findMin(node->left);
+        }
+    }
+
+    void deleteNode(Node*& node, string keyword)
+    {
+        if(node==NULL)
+        {
+            return;
+        }
+        if(keyword<node->keyword)
+        {
+            deleteNode(node->left,keyword);
+        }
+        else if(keyword>node->keyword)
+        {
+            deleteNode(node->right,keyword);
+        }
+        else
+        {
+            if(node->left==NULL)
+            {
+                Node* temp=node->right;
+                delete node;
+                node=temp;
+            }
+            else if(node->right==NULL)
+            {
+                Node* temp=node->left;
+                delete node;
+                node=temp;
+            }
+            else
+            {
+                Node* temp=findMin(node->right);
+                node->keyword=temp->keyword;
+                node->meaning=temp->meaning;
+                deleteNode(node->right,temp->keyword);
+            }
+        }
+
+    }
+
+
+
 };
 
 
@@ -130,18 +186,25 @@ int main()
     dict.display();
     cout << endl;
 
-    Dictionary dictCopy(dict);
-    dict.insert("Orange","Another fruit");
-    dict.insert("Laptop","A portable computer");
+    // Dictionary dictCopy(dict);
+    // dict.insert("Orange","Another fruit");
+    // dict.insert("Laptop","A portable computer");
 
-    cout << "Copy of dictionary:" << endl;
-    dictCopy.display();
-    cout << endl;
+    // cout << "Copy of dictionary:" << endl;
+    // dictCopy.display();
+    // cout << endl;
 
-    dict.mirror(dict.root);
-    cout << "Mirrored dictionary:" << endl;
+    // dict.mirror(dict.root);
+    // cout << "Mirrored dictionary:" << endl;
+    // dict.display();
+    // cout << endl;
+
+    // delete an entry from the dictionary
+    cout<<"After Deletion:"<<endl;
+    dict.deleteNode(dict.root, "Apple");
+
+    // display the updated dictionary
     dict.display();
-    cout << endl;
 
     return 0;
 }
